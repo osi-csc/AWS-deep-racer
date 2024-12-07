@@ -1,0 +1,24 @@
+def reward_function(params):
+    penalize = 0.003  #minimum reward for bad behavior
+    reward_on_track = 1.0  #reward for staying on track
+
+    wp = params['closest_waypoints'][1]  # Current waypoint index
+    speed = params['speed']  # Current speed of the car
+    all_wheels_on_track = params['all_wheels_on_track']  # Boolean flag for on-track status
+
+    #range of waypoints for critical sections
+    waypoints = list(range(20, 50)) + list(range(65, 70)) + list(range(77, 88)) + list(range(100, 110))
+
+    # Penalize if the car goes off-track
+    if not all_wheels_on_track:
+        return penalize  # Minimal reward for going off the track
+
+    # Penalize high speed in critical sections
+    if wp in waypoints:
+        if speed >= 2:  # Speed threshold
+            return penalize  # Penalize if speed is too high in critical areas
+
+    # Reward for staying on track and proportional to speed
+    reward = reward_on_track + speed
+
+    return float(reward)
